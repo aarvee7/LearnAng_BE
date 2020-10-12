@@ -5,6 +5,7 @@ const express = require("express");
 const data = require("./data.json");
 const users = require("./users.json");
 const jwt = require("jsonwebtoken");
+const base64 = require("base64url");
 const MongoClient = require("mongodb").MongoClient;
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -15,6 +16,7 @@ const { connect } = require("http2");
 const { Pool, Client } = require("pg");
 const { json } = require("body-parser");
 const ConService = require("./PGmodule/db");
+const { decode } = require("punycode");
 
 // pool.query(
 //   "INSERT INTO users(id,firstName,lastName,email,password) VALUES($1,$2,$3,$4,$5) RETURNING *",
@@ -130,6 +132,28 @@ app.post("/message", async (req, res) => {
   console.log("starting...");
   const msg = await conService.postMessages(req.body);
   res.send(req.body);
+});
+
+app.post("/decode", async (req, res) => {
+  console.log("starting...");
+  const headerInBase64UrlFormat = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+  const signInBase64UrlFormat = "csGpnYpRhasUVNr4yd7keThJ1votpF7P1WEKAtcw4CY";
+  const decodedheader = base64.decode(headerInBase64UrlFormat);
+  const decodedSign = base64.decode(signInBase64UrlFormat);
+  var t = jwt.verify(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Ik1vYmlsZU51bWJlciI6IjgwNTY1NjAwNzUiLCJSb2xlIjoiQXBwbGljYW50In0sImlhdCI6MTU5NzY3MTU4NCwiZXhwIjoxNTk3NjcyNzg0fQ.csGpnYpRhasUVNr4yd7keThJ1votpF7P1WEKAtcw4CY",
+    "",
+    "HS256"
+  );
+  var d = jwt.decode(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Ik1vYmlsZU51bWJlciI6IjgwNTY1NjAwNzUiLCJSb2xlIjoiQXBwbGljYW50In0sImlhdCI6MTU5NzY3MTU4NCwiZXhwIjoxNTk3NjcyNzg0fQ.csGpnYpRhasUVNr4yd7keThJ1votpF7P1WEKAtcw4CY"
+  );
+  // const msg = await conService.postMessages(req.body);
+  console.log(t);
+  console.log(d);
+  //console.log(decodedheader, decodedSign);
+  //res.send(decodedheader);
+  res.send(decodedSign);
 });
 
 app.get("/users/me", checAuth, (req, res) => {

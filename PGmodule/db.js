@@ -1,7 +1,9 @@
 const express = require("express");
 const { Pool, Client } = require("pg");
 
-const connectionString = "postgresql://postgres:madrid@localhost:5432/TestPG";
+const connectionString =
+  //"postgres://bfgkyyzhoeodni:cbf28a355df6b6634cb6112648032073c1e12c87677363f3677ab8af87dc9fc2@ec2-52-44-55-63.compute-1.amazonaws.com:5432/da28jl7vr80bkd";
+  "postgresql://postgres:madrid@localhost:5432/TestPG";
 const pool = new Pool({
   connectionString: connectionString,
 });
