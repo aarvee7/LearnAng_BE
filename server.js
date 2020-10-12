@@ -115,6 +115,10 @@ app.get("/", (req, res) => {
   res.send("dhajhdjashdj");
 });
 
+app.get("/test", (req, res) => {
+  res.send("testing new deploy");
+});
+
 app.get("/messages", async (req, res) => {
   const msgs = await conService.getMessages();
   console.log("test");
