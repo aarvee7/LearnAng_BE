@@ -6,6 +6,7 @@ const data = require("./data.json");
 const users = require("./users.json");
 const jwt = require("jsonwebtoken");
 const base64 = require("base64url");
+const nodemailer = require("nodemailer");
 const MongoClient = require("mongodb").MongoClient;
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -103,6 +104,20 @@ app.use((req, res, next) => {
   next();
 });
 
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "krajvel3@gmail.com",
+    pass: "cwwalzbjwgpnvieg",
+  },
+});
+
+var mailOptions = {
+  from: "krajvel3@gmail.com",
+  to: "krajvel3@gmail.com",
+  subject: "Sending Email using Node.js",
+  text: "That was easy!",
+};
 //const msgs = data;
 //console.log(msgs);
 const userslist = users;
@@ -112,10 +127,20 @@ const userslist = users;
 const auth = express.Router();
 
 app.get("/", (req, res) => {
-  res.send("dhajhdjashdj");
+  res.send("HelloWorld");
 });
 
 app.get("/test", (req, res) => {
+  // const data = { id: 1, name: "name" };
+  // const { id: value } = data;
+  // console.log(id);
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   res.send("testing new deploy");
 });
 
@@ -177,15 +202,17 @@ app.post("/register", (req, res) => {
   // console.log(req.body);
   const udata = userslist;
   console.log(req.body);
-  var index = udata.push(req.body) - 1;
-  console.log(index);
-  var tt = udata[index];
-  console.log(tt);
-  tt.id = index;
-  console.log(tt);
-  fs.writeFileSync(path.join(__dirname, "users.json"), JSON.stringify(udata));
+  // var index = udata.push(req.body) - 1;
+  // console.log(index);
+  // var tt = udata[index];
+  // console.log(tt);
+  // tt.id = index;
+  // console.log(tt);
+  // fs.writeFileSync(path.join(__dirname, "users.json"), JSON.stringify(udata));
 
-  sendToken(tt, res);
+  // sendToken(tt, res);
+  //const result = await conService.postMessages(req.body);
+  //res.send(result);
 });
 
 app.post("/login", (req, res) => {
